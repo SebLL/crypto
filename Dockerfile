@@ -22,6 +22,20 @@ RUN yum install -y \
     redhat-rpm-config \
     gcc \
     openssl-devel.s390x
+
+
+
+#Compiling the latest libica package for CPACF icastats and icainfo commands
+
+RUN git clone https://github.com/opencryptoki/libica.git \
+    && cd libica \
+    && autoreconf --force --install --verbose --warnings=all \
+    && ./configure \
+    && make \
+    && make install
+
+# Remove cache to make the image smaller
+RUN yum remove -y wget git && yum autoremove
 # change group check
 RUN sed -i 's/Listen 80/Listen 8080/'  /etc/httpd/conf/httpd.conf  && chgrp -R 0 /var/log/httpd /var/run/httpd  && chmod -R g=u /var/log/httpd /var/run/httpd && echo "Crypto Tests with Red Hat OpenShift" > /var/www/html/index.html
 EXPOSE 8080
