@@ -1,4 +1,5 @@
 FROM quay.io/sebll/ubi8httpsebll:v1
+RUN chgrp -R 0 /run && chmod -R g=u /run
 RUN yum --disableplugin=subscription-manager install httpd -y && yum --disableplugin=subscription-manager clean all
 RUN yum install -y \
     s390utils-base \
